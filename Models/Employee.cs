@@ -35,6 +35,8 @@ namespace Company.Models
                 return (int)years;
             }
         }
+
+        [Display(Name = "Full Name")]
         public string FullName
         {
             get { return string.Format("{0} {1}", FirstName, LastName); }

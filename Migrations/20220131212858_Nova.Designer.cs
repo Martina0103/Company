@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Company.Migrations
 {
     [DbContext(typeof(CompanyContext))]
-    [Migration("20220129235835_Initial")]
-    partial class Initial
+    [Migration("20220131212858_Nova")]
+    partial class Nova
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -87,7 +87,7 @@ namespace Company.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("ClientEmployee");
+                    b.ToTable("ClientEmployees");
                 });
 
             modelBuilder.Entity("Company.Models.Employee", b =>

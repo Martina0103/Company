@@ -146,7 +146,6 @@ C:\Users\marti\NetRepo\Company\bin\Debug\netcoreapp3.1\Microsoft.Bcl.AsyncInterf
 C:\Users\marti\NetRepo\Company\bin\Debug\netcoreapp3.1\Microsoft.Bcl.HashCode.dll
 C:\Users\marti\NetRepo\Company\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.dll
 C:\Users\marti\NetRepo\Company\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Binder.dll
-C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Company.csproj.AssemblyReference.cache
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Create.cshtml.g.cs
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Delete.cshtml.g.cs
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Clients\Details.cshtml.g.cs
@@ -162,3 +161,4 @@ C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Employees\Del
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Employees\Details.cshtml.g.cs
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Employees\Edit.cshtml.g.cs
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Employees\Index.cshtml.g.cs
+C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Company.csproj.AssemblyReference.cache

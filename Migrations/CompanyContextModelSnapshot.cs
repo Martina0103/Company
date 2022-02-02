@@ -85,7 +85,7 @@ namespace Company.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("ClientEmployee");
+                    b.ToTable("ClientEmployees");
                 });
 
             modelBuilder.Entity("Company.Models.Employee", b =>

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Company.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Nova : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -62,7 +62,7 @@ namespace Company.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClientEmployee",
+                name: "ClientEmployees",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -72,15 +72,15 @@ namespace Company.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientEmployee", x => x.Id);
+                    table.PrimaryKey("PK_ClientEmployees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientEmployee_Client_ClientId",
+                        name: "FK_ClientEmployees_Client_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Client",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ClientEmployee_Employee_EmployeeId",
+                        name: "FK_ClientEmployees_Employee_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employee",
                         principalColumn: "Id",
@@ -88,13 +88,13 @@ namespace Company.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientEmployee_ClientId",
-                table: "ClientEmployee",
+                name: "IX_ClientEmployees_ClientId",
+                table: "ClientEmployees",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ClientEmployee_EmployeeId",
-                table: "ClientEmployee",
+                name: "IX_ClientEmployees_EmployeeId",
+                table: "ClientEmployees",
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
@@ -106,7 +106,7 @@ namespace Company.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ClientEmployee");
+                name: "ClientEmployees");
 
             migrationBuilder.DropTable(
                 name: "Client");

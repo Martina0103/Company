@@ -22,7 +22,7 @@ namespace Company.Controllers
         // GET: Employees
         public async Task<IActionResult> Index()
         {
-            var companyContext = _context.Employee.Include(e => e.Branch);
+            var companyContext = _context.Employee.Include(e => e.Branch).Include(e => e.Clients).ThenInclude(e => e.Client);
             return View(await companyContext.ToListAsync());
         }
 
@@ -36,6 +36,7 @@ namespace Company.Controllers
 
             var employee = await _context.Employee
                 .Include(e => e.Branch)
+                .Include(e => e.Clients).ThenInclude(e => e.Client)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
@@ -132,6 +133,7 @@ namespace Company.Controllers
 
             var employee = await _context.Employee
                 .Include(e => e.Branch)
+                .Include(e => e.Clients).ThenInclude(e => e.Client)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (employee == null)
             {
