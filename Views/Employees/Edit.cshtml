@@ -1,4 +1,4 @@
-﻿@model Company.Models.Employee
+﻿@model Company.ViewModels.EmployeeClientsEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,38 +12,43 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Employee.Id" />
             <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
+                <label asp-for="Employee.FirstName" class="control-label"></label>
+                <input asp-for="Employee.FirstName" class="form-control" />
+                <span asp-validation-for="Employee.FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
+                <label asp-for="Employee.LastName" class="control-label"></label>
+                <input asp-for="Employee.LastName" class="form-control" />
+                <span asp-validation-for="Employee.LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BirthDate" class="control-label"></label>
-                <input asp-for="BirthDate" class="form-control" />
-                <span asp-validation-for="BirthDate" class="text-danger"></span>
+                <label asp-for="Employee.BirthDate" class="control-label"></label>
+                <input asp-for="Employee.BirthDate" class="form-control" />
+                <span asp-validation-for="Employee.BirthDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Salary" class="control-label"></label>
-                <input asp-for="Salary" class="form-control" />
-                <span asp-validation-for="Salary" class="text-danger"></span>
+                <label asp-for="Employee.Salary" class="control-label"></label>
+                <input asp-for="Employee.Salary" class="form-control" />
+                <span asp-validation-for="Employee.Salary" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="JobTitle" class="control-label"></label>
-                <input asp-for="JobTitle" class="form-control" />
-                <span asp-validation-for="JobTitle" class="text-danger"></span>
+                <label asp-for="Employee.JobTitle" class="control-label"></label>
+                <input asp-for="Employee.JobTitle" class="form-control" />
+                <span asp-validation-for="Employee.JobTitle" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="BranchId" class="control-label"></label>
-                <select asp-for="BranchId" class="form-control" asp-items="ViewBag.BranchId">
+                <label asp-for="Employee.BranchId" class="control-label"></label>
+                <select asp-for="Employee.BranchId" class="form-control" asp-items="ViewBag.BranchId">
                     <option value="">Select</option>
                 </select>
-                <span asp-validation-for="BranchId" class="text-danger"></span>
+                <span asp-validation-for="Employee.BranchId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Clients</label>
+                <select asp-for="SelectedClients" class="form-control js-example-basic-multiple"
+                        asp-items="Model.ClientList"> </select> <span asp-validation-for="SelectedClients" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -58,4 +63,12 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+        $("#SelectedClients").select2();
+        });
+    </script>
 }

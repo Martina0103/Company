@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Company.Data;
 using Company.Models;
+using Company.ViewModels;
+using System.Collections.Generic;
 
 namespace Company.Controllers
 {
@@ -78,13 +78,23 @@ namespace Company.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employee.FindAsync(id);
+           /* var employee = await _context.Employee.FindAsync(id);*/
+            var employee = _context.Employee.Where(m => m.Id == id).Include(m => m.Clients).First();
             if (employee == null)
             {
                 return NotFound();
             }
+            var clients = _context.Client.AsEnumerable();
+            clients = clients.OrderBy(s => s.Name);
+            EmployeeClientsEditViewModel viewmodel = new EmployeeClientsEditViewModel
+            {
+                Employee = employee,
+                ClientList = new MultiSelectList(clients, "Id", "Name"),
+                SelectedClients = employee.Clients.Select(sa => sa.ClientId)
+            };
+
             ViewData["BranchId"] = new SelectList(_context.Branch, "Id", "Name", employee.BranchId);
-            return View(employee);
+            return View(viewmodel);
         }
 
         // POST: Employees/Edit/5
@@ -92,9 +102,11 @@ namespace Company.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,BirthDate,Salary,JobTitle,BranchId")] Employee employee)
+/*        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,BirthDate,Salary,JobTitle,BranchId")] Employee employee)
+*/        public async Task<IActionResult> Edit(int id, EmployeeClientsEditViewModel viewmodel)
+
         {
-            if (id != employee.Id)
+            if (id != viewmodel.Employee.Id)
             {
                 return NotFound();
             }
@@ -103,12 +115,23 @@ namespace Company.Controllers
             {
                 try
                 {
-                    _context.Update(employee);
+                    _context.Update(viewmodel.Employee);
+                    await _context.SaveChangesAsync();
+
+                    IEnumerable<int> listClients = viewmodel.SelectedClients;
+                    IQueryable<ClientEmployee> toBeRemoved = _context.ClientEmployees.Where(s => !listClients.Contains(s.ClientId) && s.EmployeeId == id);
+                    _context.ClientEmployees.RemoveRange(toBeRemoved);
+
+                    IEnumerable<int> existClients = _context.ClientEmployees.Where(s => listClients.Contains(s.ClientId) && s.EmployeeId == id).Select(s => s.ClientId);
+                    IEnumerable<int> newActors = listClients.Where(s => !existClients.Contains(s));
+                    foreach (int actorId in newActors) 
+                        _context.ClientEmployees.Add(new ClientEmployee { ClientId = actorId, EmployeeId = id });
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EmployeeExists(employee.Id))
+                    if (!EmployeeExists(viewmodel.Employee.Id))
                     {
                         return NotFound();
                     }
@@ -119,8 +142,8 @@ namespace Company.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BranchId"] = new SelectList(_context.Branch, "Id", "Name", employee.BranchId);
-            return View(employee);
+            ViewData["BranchId"] = new SelectList(_context.Branch, "Id", "Name", viewmodel.Employee.BranchId);
+            return View(viewmodel);
         }
 
         // GET: Employees/Delete/5
