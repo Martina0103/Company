@@ -20,10 +20,28 @@ namespace Company.Controllers
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string employeeJobTitle, string searchString)
         {
-            var companyContext = _context.Employee.Include(e => e.Branch).Include(e => e.Clients).ThenInclude(e => e.Client);
-            return View(await companyContext.ToListAsync());
+            /*            var companyContext = _context.Employee.Include(e => e.Branch).Include(e => e.Clients).ThenInclude(e => e.Client);
+                        return View(await companyContext.ToListAsync());*/
+            IQueryable<Employee> employees = _context.Employee.AsQueryable();
+            IQueryable<string> jobTitleQuery = _context.Employee.OrderBy(m => m.JobTitle).Select(m => m.JobTitle).Distinct();
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                employees = employees.Where(s => s.FirstName.Contains(searchString) || s.LastName.Contains(searchString));
+            }
+            if (!string.IsNullOrEmpty(employeeJobTitle))
+            {
+                employees = employees.Where(x => x.JobTitle == employeeJobTitle);
+            }
+            employees = employees.Include(m => m.Branch)
+            .Include(m => m.Clients).ThenInclude(m => m.Client);
+            var employeeJobTItleVM = new EmployeeJobViewModel
+            {
+                JobTitles = new SelectList(await jobTitleQuery.ToListAsync()),
+                Employees = await employees.ToListAsync()
+            };
+            return View(employeeJobTItleVM);
         }
 
         // GET: Employees/Details/5

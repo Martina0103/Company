@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Company.Models.Employee>
+﻿@*@model IEnumerable<Company.Models.Employee>
+*@
+@model Company.ViewModels.EmployeeJobViewModel
 
 @{
     ViewData["Title"] = "Employees";
@@ -9,86 +11,98 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-controller="Employees" asp-action="Index" method="get">
+    <p>
+        <select asp-for="EmployeeJobTitle" asp-items="Model.JobTitles">
+            <option value="">All</option>
+        </select>
+        Full Name: <input type="text" asp-for="SearchString" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
 <table class="table">
     <thead>
         <tr>
             @*<th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>*@
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.LastName)
+                </th>*@
             <th>
-                @Html.DisplayNameFor(model => model.FullName)
+                @Html.DisplayNameFor(model => model.Employees[0].FullName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BirthDate)
+                @Html.DisplayNameFor(model => model.Employees[0].BirthDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Age)
+                @Html.DisplayNameFor(model => model.Employees[0].Age)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Salary)
+                @Html.DisplayNameFor(model => model.Employees[0].Salary)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.JobTitle)
+                @Html.DisplayNameFor(model => model.Employees[0].JobTitle)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Branch)
+                @Html.DisplayNameFor(model => model.Employees[0].Branch)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Clients)
+                @Html.DisplayNameFor(model => model.Employees[0].Clients)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            @*<td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BirthDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Age)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Salary)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JobTitle)
-            </td>
-            <td>
-                @if (item.BranchId != null)
-                {
-                <a asp-controller="Branches" asp-action="Details" asp-route-id="@item.BranchId">@Html.DisplayFor(modelItem => item.Branch.Name)</a>
-                }
-            </td>
-            <td>
-                @if (item.Clients != null)
-                {
-                    @foreach (var client in item.Clients)
+        @foreach (var item in Model.Employees)
+        {
+            <tr>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BirthDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Age)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Salary)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JobTitle)
+                </td>
+                <td>
+                    @if (item.BranchId != null)
                     {
-                        <a asp-controller="Clients" asp-action="Details" asp-route-id="@client.ClientId">
-                            @client.Client.Name
-                        </a> <br />
+                        <a asp-controller="Branches" asp-action="Details" asp-route-id="@item.BranchId">@Html.DisplayFor(modelItem => item.Branch.Name)</a>
                     }
-                }
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+                </td>
+                <td>
+                    @if (item.Clients != null)
+                    {
+                        @foreach (var client in item.Clients)
+                        {
+                            <a asp-controller="Clients" asp-action="Details" asp-route-id="@client.ClientId">
+                                @client.Client.Name
+                            </a> <br />
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
