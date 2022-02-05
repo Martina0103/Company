@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Company.Models.Client>
+﻿@model Company.ViewModels.ClientNameViewModel
 
 @{
     ViewData["Title"] = "Clients";
@@ -9,26 +9,48 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form asp-controller="Clients" asp-action="Index" method="get">
+    <p>
+        <select asp-for="ClientName" asp-items="Model.Names">
+            <option value="">All</option>
+        </select>
+        Location: <input type="text" asp-for="SearchString" />
+        <input type="submit" value="Filter" />
+    </p>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.Clients[0])
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Location)
+                @Html.DisplayNameFor(model => model.Clients[0])
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Employees)*@
+                Sales Representative
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Clients) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @if (item.Employees != null)
+                {
+                    @foreach (var employee in item.Employees)
+                    {
+                        <a asp-controller="Employees" asp-action="Details" asp-route-id="@employee.EmployeeId"> @employee.Employee.FullName </a> <br />
+                    }
+                }
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -1,4 +1,4 @@
-﻿@model Company.Models.Client
+﻿@model Company.ViewModels.ClientEmployeesEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,20 +12,27 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Client.Id" />
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Client.Name" class="control-label"></label>
+                <input asp-for="Client.Name" class="form-control" />
+                <span asp-validation-for="Client.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
+                <label asp-for="Client.Location" class="control-label"></label>
+                <input asp-for="Client.Location" class="form-control" />
+                <span asp-validation-for="Client.Location" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
+
+            <div class="form-group">
+                <label class="control-label">Sales Representative</label>
+                <select asp-for="SelectedEmployees" class="form-control js-example-basic-multiple"
+                        asp-items="Model.EmployeeList"> </select> <span asp-validation-for="SelectedEmployees" class="text-danger"></span>
+            </div>
+
         </form>
     </div>
 </div>
@@ -36,4 +43,11 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script>
+$(document).ready(function () {
+$("#SelectedEmployees").select2();
+});
+    </script>
 }

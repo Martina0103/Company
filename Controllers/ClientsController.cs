@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Company.Data;
 using Company.Models;
+using Company.ViewModels;
+using System.Collections.Generic;
 
 namespace Company.Controllers
 {
@@ -20,9 +20,30 @@ namespace Company.Controllers
         }
 
         // GET: Clients
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string clientName, string searchString)
         {
-            return View(await _context.Client.ToListAsync());
+            /*var companyContext = _context.Client.Include(e => e.Employees).ThenInclude(e => e.Employee);
+            // var companyContext = _context.Client.Include(m => m.Employees).ThenInclude(m => m.Employee);
+            return View(await companyContext.ToListAsync());*/
+
+            IQueryable<Client> clients = _context.Client.AsQueryable();
+            IQueryable<string> nameQuery = _context.Client.OrderBy(m => m.Name).Select(m => m.Name).Distinct();
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                clients = clients.Where(s => s.Location.Contains(searchString));
+            }
+            if (!string.IsNullOrEmpty(clientName))
+            {
+                clients = clients.Where(x => x.Name == clientName);
+            }
+            clients = clients.Include(m => m.Employees).ThenInclude(m => m.Employee);
+            var clientNameVM = new ClientNameViewModel
+            {
+                Names = new SelectList(await nameQuery.ToListAsync()),
+                Clients = await clients.ToListAsync()
+            };
+            return View(clientNameVM);
+
         }
 
         // GET: Clients/Details/5
@@ -34,6 +55,7 @@ namespace Company.Controllers
             }
 
             var client = await _context.Client
+                .Include(m => m.Employees).ThenInclude(m => m.Employee)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (client == null)
             {
@@ -73,12 +95,25 @@ namespace Company.Controllers
                 return NotFound();
             }
 
-            var client = await _context.Client.FindAsync(id);
+            //var client = await _context.Client.FindAsync(id);
+
+            var client = _context.Client.Where(m => m.Id == id).Include(m => m.Employees).First();
+            
             if (client == null)
             {
                 return NotFound();
             }
-            return View(client);
+
+            var employees = _context.Employee.AsEnumerable();
+            employees = employees.OrderBy(s => s.FullName);
+            ClientEmployeesEditViewModel viewmodel = new ClientEmployeesEditViewModel
+            {
+                Client = client,
+                EmployeeList = new MultiSelectList(employees, "Id", "FullName"),
+                SelectedEmployees = client.Employees.Select(e => e.EmployeeId)
+            };
+
+            return View(viewmodel);
         }
 
         // POST: Clients/Edit/5
@@ -86,9 +121,9 @@ namespace Company.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Location")] Client client)
+        public async Task<IActionResult> Edit(int id, ClientEmployeesEditViewModel viewmodel)
         {
-            if (id != client.Id)
+            if (id != viewmodel.Client.Id)
             {
                 return NotFound();
             }
@@ -97,12 +132,22 @@ namespace Company.Controllers
             {
                 try
                 {
-                    _context.Update(client);
+                    _context.Update(viewmodel.Client);
                     await _context.SaveChangesAsync();
+
+                    IEnumerable<int> listEmployees = viewmodel.SelectedEmployees;
+                    IQueryable<ClientEmployee> toBeRemoved = _context.ClientEmployees.Where(s => !listEmployees.Contains(s.EmployeeId) && s.ClientId == id);
+                    _context.ClientEmployees.RemoveRange(toBeRemoved);
+                    IEnumerable<int> existEmployees = _context.ClientEmployees.Where(s => listEmployees.Contains(s.EmployeeId) && s.ClientId == id).Select(s => s.EmployeeId);
+                    IEnumerable<int> newEmployees = listEmployees.Where(s => !existEmployees.Contains(s));
+                    foreach (int actorId in newEmployees) _context.ClientEmployees.Add(new ClientEmployee { EmployeeId = actorId, ClientId = id });
+                    
+                    await _context.SaveChangesAsync();
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClientExists(client.Id))
+                    if (!ClientExists(viewmodel.Client.Id))
                     {
                         return NotFound();
                     }
@@ -113,7 +158,7 @@ namespace Company.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(client);
+            return View(viewmodel.Client);
         }
 
         // GET: Clients/Delete/5
@@ -125,6 +170,7 @@ namespace Company.Controllers
             }
 
             var client = await _context.Client
+                .Include(m => m.Employees).ThenInclude(m => m.Employee)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (client == null)
             {

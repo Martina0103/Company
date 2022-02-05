@@ -162,3 +162,4 @@ C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Employees\Det
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Employees\Edit.cshtml.g.cs
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Employees\Index.cshtml.g.cs
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Company.csproj.AssemblyReference.cache
+C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Careers\Index.cshtml.g.cs
