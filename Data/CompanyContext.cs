@@ -21,5 +21,7 @@ namespace Company.Data
         public DbSet<Company.Models.Employee> Employee { get; set; }
 
         public DbSet<Company.Models.ClientEmployee> ClientEmployees { get; set; }       
+
+        public DbSet<Company.Models.Intern> Intern { get; set; }
     }
 }

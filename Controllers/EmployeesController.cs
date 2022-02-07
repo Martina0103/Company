@@ -7,6 +7,8 @@ using Company.Data;
 using Company.Models;
 using Company.ViewModels;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Company.Controllers
 {
@@ -76,16 +78,25 @@ namespace Company.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,BirthDate,Salary,JobTitle,BranchId")] Employee employee)
+        public async Task<IActionResult> Create(IFormFile file, [Bind("Id,FirstName,LastName,BirthDate,Salary,JobTitle,BranchId")] Employee employee)
         {
-            if (ModelState.IsValid)
+            if (file != null)
             {
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                string filename = file.FileName;
+                string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images"));
+                using (var filestream = new FileStream(Path.Combine(path, filename), FileMode.Create))
+                { await file.CopyToAsync(filestream); }
+
+                employee.ProfilePicture = filename;
             }
+            /*if (ModelState.IsValid)
+            {            }*/
+            _context.Add(employee);
+            await _context.SaveChangesAsync();
+            //return RedirectToAction(nameof(Index));
             ViewData["BranchId"] = new SelectList(_context.Branch, "Id", "Name", employee.BranchId);
-            return View(employee);
+            //return View(employee);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Employees/Edit/5
@@ -121,7 +132,7 @@ namespace Company.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 /*        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,BirthDate,Salary,JobTitle,BranchId")] Employee employee)
-*/        public async Task<IActionResult> Edit(int id, EmployeeClientsEditViewModel viewmodel)
+*/        public async Task<IActionResult> Edit(int id, IFormFile file, EmployeeClientsEditViewModel viewmodel)
 
         {
             if (id != viewmodel.Employee.Id)
@@ -129,10 +140,20 @@ namespace Company.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+           /* if (ModelState.IsValid)
+            {*/
                 try
                 {
+                    if (file != null)
+                    {
+                        string filename = file.FileName;
+                        string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images"));
+                        using (var filestream = new FileStream(Path.Combine(path, filename), FileMode.Create))
+                        { await file.CopyToAsync(filestream); }
+
+                        viewmodel.Employee.ProfilePicture = filename;
+                    }
+
                     _context.Update(viewmodel.Employee);
                     await _context.SaveChangesAsync();
 
@@ -158,10 +179,11 @@ namespace Company.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
-            }
+                //return RedirectToAction(nameof(Index));
+            //}
             ViewData["BranchId"] = new SelectList(_context.Branch, "Id", "Name", viewmodel.Employee.BranchId);
-            return View(viewmodel);
+            return RedirectToAction(nameof(Index));
+            //return View(viewmodel);
         }
 
         // GET: Employees/Delete/5

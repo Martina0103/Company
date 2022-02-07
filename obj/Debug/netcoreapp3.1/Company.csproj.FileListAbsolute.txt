@@ -163,3 +163,8 @@ C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Employees\Edi
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Employees\Index.cshtml.g.cs
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Company.csproj.AssemblyReference.cache
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Careers\Index.cshtml.g.cs
+C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Interns\Create.cshtml.g.cs
+C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Interns\Delete.cshtml.g.cs
+C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Interns\Details.cshtml.g.cs
+C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Interns\Edit.cshtml.g.cs
+C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Interns\Index.cshtml.g.cs
