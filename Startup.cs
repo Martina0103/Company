@@ -43,7 +43,10 @@ namespace Company
 
             services.AddCors();
 
-            services.AddIdentity<CompanyUser, IdentityRole>().AddEntityFrameworkStores<CompanyContext>().AddDefaultTokenProviders();
+            services.AddIdentity<CompanyUser, IdentityRole>()
+                .AddEntityFrameworkStores<CompanyContext>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI(); //za da moze da se pravi i register
 
             services.AddMvc()
                 .AddRazorPagesOptions(options =>

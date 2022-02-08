@@ -81,6 +81,6 @@
     @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
     {
         <a asp-action="Edit" asp-route-id="@Model.Id">Edit |</a>
-    }    
+    }
     <a asp-action="Index">Back to List</a>
 </div>

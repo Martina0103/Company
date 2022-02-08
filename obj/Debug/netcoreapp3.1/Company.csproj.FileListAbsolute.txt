@@ -193,3 +193,4 @@ C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Page
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ViewImports.cshtml.g.cs
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ViewStart.cshtml.g.cs
 C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_LoginPartial.cshtml.g.cs
+C:\Users\marti\NetRepo\Company\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\Account\Register.cshtml.g.cs

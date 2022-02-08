@@ -6,6 +6,10 @@
 
 <h1>Branches</h1>
 
+@*
+    Only ADMIN can create
+*@
+
 @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
 {
     <p>
@@ -21,9 +25,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.StartDate)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Profit)
-            </th>
+            @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.Profit)
+                </th>
+            }
             <th>
                 @Html.DisplayNameFor(model => model.Headquarters)
             </th>
@@ -40,9 +47,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.StartDate)
                 </td>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
                 <td>
                     @Html.DisplayFor(modelItem => item.Profit)
                 </td>
+                }
                 <td>
                     @Html.DisplayFor(modelItem => item.Headquarters)
                 </td>

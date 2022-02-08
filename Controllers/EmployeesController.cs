@@ -104,6 +104,7 @@ namespace Company.Controllers
 
         // GET: Employees/Edit/5
         [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -136,6 +137,7 @@ namespace Company.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Edit(int id, IFormFile file, EmployeeClientsEditViewModel viewmodel)
 
         {
@@ -189,6 +191,7 @@ namespace Company.Controllers
 
         // GET: Employees/Delete/5
         [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -212,6 +215,7 @@ namespace Company.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var employee = await _context.Employee.FindAsync(id);

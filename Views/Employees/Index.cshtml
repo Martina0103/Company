@@ -37,9 +37,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Employees[0].Age)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employees[0].Salary)
-            </th>
+            @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Manager")))
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.Employees[0].Salary)
+                </th>
+            }
             <th>
                 @Html.DisplayNameFor(model => model.Employees[0].JobTitle)
             </th>
@@ -55,56 +58,59 @@
     <tbody>
         @foreach (var item in Model.Employees)
         {
-            <tr>
-                <td>
-                    <img src="~/images/@item.ProfilePicture"
-                         class="rounded-circle"
-                         height="40" width="40"
-                         asp-append-version="true" />
-                    @item.FullName
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BirthDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Age)
-                </td>
+        <tr>
+            <td>
+                <img src="~/images/@item.ProfilePicture"
+                     class="rounded-circle"
+                     height="40" width="40"
+                     asp-append-version="true" />
+                @item.FullName
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BirthDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+            @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Manager")))
+            {
                 <td>
                     @Html.DisplayFor(modelItem => item.Salary)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.JobTitle)
-                </td>
-                <td>
-                    @if (item.BranchId != null)
+            }
+            <td>
+                @Html.DisplayFor(modelItem => item.JobTitle)
+            </td>
+            <td>
+                @if (item.BranchId != null)
+                {
+                    <a asp-controller="Branches" asp-action="Details" asp-route-id="@item.BranchId">@Html.DisplayFor(modelItem => item.Branch.Name)</a>
+                }
+            </td>
+            <td>
+                @if (item.Clients != null)
+                {
+                    @foreach (var client in item.Clients)
                     {
-                        <a asp-controller="Branches" asp-action="Details" asp-route-id="@item.BranchId">@Html.DisplayFor(modelItem => item.Branch.Name)</a>
+                        <a asp-controller="Clients" asp-action="Details" asp-route-id="@client.ClientId">
+                            @client.Client.Name
+                        </a> <br />
                     }
-                </td>
-                <td>
-                    @if (item.Clients != null)
-                    {
-                        @foreach (var client in item.Clients)
-                        {
-                            <a asp-controller="Clients" asp-action="Details" asp-route-id="@client.ClientId">
-                                @client.Client.Name
-                            </a> <br />
-                        }
-                    }
-                </td>
-                <td>
-                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit |</a>
-                    }
+                }
+            </td>
+            <td>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit |</a>
+                }
 
-                    <a asp-action="Details" asp-route-id="@item.Id">Details </a> |
-                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
-                    {
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    }
-                </td>
-            </tr>
+                <a asp-action="Details" asp-route-id="@item.Id">Details </a> |
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                }
+            </td>
+        </tr>
         }
     </tbody>
 </table>

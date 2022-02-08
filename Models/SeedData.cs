@@ -30,6 +30,22 @@ namespace Company.Models
                 //Add default User to Role Admin
                 if (chkUser.Succeeded) { var result1 = await UserManager.AddToRoleAsync(User, "Admin"); }
             }
+
+            //Manager Role
+            var roleCheckMng = await RoleManager.RoleExistsAsync("Manager");
+            if (!roleCheckMng) { roleResult = await RoleManager.CreateAsync(new IdentityRole("Manager")); }
+            CompanyUser userMng = await UserManager.FindByEmailAsync("manager@company.com");
+            if (userMng == null)
+            {
+                var User = new CompanyUser();
+                User.Email = "manager@company.com";
+                User.UserName = "manager@company.com";
+                string userPWD = "Manager123";
+                IdentityResult chkUser = await UserManager.CreateAsync(User, userPWD);
+                
+                if (chkUser.Succeeded) { var result1 = await UserManager.AddToRoleAsync(User, "Manager"); }
+            }
+
         }
 
         public static void Initialize(IServiceProvider serviceProvider)
