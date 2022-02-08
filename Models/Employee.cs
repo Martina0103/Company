@@ -48,13 +48,12 @@ namespace Company.Models
         [StringLength(100)]
         [Display(Name = "Job Title")]
         public string JobTitle { get; set; }
+        public string ProfilePicture { get; set; }
         public Branch Branch { get; set; }
 
         [Display(Name = "Branch")]
         public int? BranchId { get; set; }         //nadvoreshen kluc
 
-        [Required(ErrorMessage = "Please choose profile image")]
-        public string ProfilePicture { get; set; }
         public ICollection<ClientEmployee> Clients { get; set; } //od junction tabelata
 
     }

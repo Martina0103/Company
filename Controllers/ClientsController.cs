@@ -7,6 +7,7 @@ using Company.Data;
 using Company.Models;
 using Company.ViewModels;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Company.Controllers
 {
@@ -66,6 +67,7 @@ namespace Company.Controllers
         }
 
         // GET: Clients/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -76,6 +78,7 @@ namespace Company.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name,Location")] Client client)
         {
             if (ModelState.IsValid)
@@ -88,6 +91,7 @@ namespace Company.Controllers
         }
 
         // GET: Clients/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,7 +102,7 @@ namespace Company.Controllers
             //var client = await _context.Client.FindAsync(id);
 
             var client = _context.Client.Where(m => m.Id == id).Include(m => m.Employees).First();
-            
+
             if (client == null)
             {
                 return NotFound();
@@ -121,6 +125,7 @@ namespace Company.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, ClientEmployeesEditViewModel viewmodel)
         {
             if (id != viewmodel.Client.Id)
@@ -141,7 +146,7 @@ namespace Company.Controllers
                     IEnumerable<int> existEmployees = _context.ClientEmployees.Where(s => listEmployees.Contains(s.EmployeeId) && s.ClientId == id).Select(s => s.EmployeeId);
                     IEnumerable<int> newEmployees = listEmployees.Where(s => !existEmployees.Contains(s));
                     foreach (int actorId in newEmployees) _context.ClientEmployees.Add(new ClientEmployee { EmployeeId = actorId, ClientId = id });
-                    
+
                     await _context.SaveChangesAsync();
 
                 }
@@ -162,6 +167,7 @@ namespace Company.Controllers
         }
 
         // GET: Clients/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -183,6 +189,7 @@ namespace Company.Controllers
         // POST: Clients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var client = await _context.Client.FindAsync(id);

@@ -38,6 +38,22 @@ namespace Company.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Intern",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(maxLength: 50, nullable: false),
+                    BirthDate = table.Column<DateTime>(nullable: false),
+                    CV = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Intern", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Employee",
                 columns: table => new
                 {
@@ -48,6 +64,7 @@ namespace Company.Migrations
                     BirthDate = table.Column<DateTime>(nullable: false),
                     Salary = table.Column<int>(nullable: true),
                     JobTitle = table.Column<string>(maxLength: 100, nullable: true),
+                    ProfilePicture = table.Column<string>(nullable: true),
                     BranchId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -107,6 +124,9 @@ namespace Company.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ClientEmployees");
+
+            migrationBuilder.DropTable(
+                name: "Intern");
 
             migrationBuilder.DropTable(
                 name: "Client");

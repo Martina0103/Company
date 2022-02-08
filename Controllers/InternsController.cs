@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Company.Data;
 using Company.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Company.Controllers
 {
@@ -44,6 +45,7 @@ namespace Company.Controllers
         }
 
         // GET: Interns/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -66,6 +68,7 @@ namespace Company.Controllers
         }
 
         // GET: Interns/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +89,7 @@ namespace Company.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,BirthDate,CV")] Intern intern)
         {
             if (id != intern.Id)
@@ -117,6 +121,7 @@ namespace Company.Controllers
         }
 
         // GET: Interns/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +142,7 @@ namespace Company.Controllers
         // POST: Interns/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var intern = await _context.Intern.FindAsync(id);

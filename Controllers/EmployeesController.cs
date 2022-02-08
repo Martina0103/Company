@@ -9,6 +9,7 @@ using Company.ViewModels;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Company.Controllers
 {
@@ -67,6 +68,7 @@ namespace Company.Controllers
         }
 
         // GET: Employees/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["BranchId"] = new SelectList(_context.Branch, "Id", "Name");
@@ -78,6 +80,7 @@ namespace Company.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(IFormFile file, [Bind("Id,FirstName,LastName,BirthDate,Salary,JobTitle,BranchId")] Employee employee)
         {
             if (file != null)
@@ -100,6 +103,7 @@ namespace Company.Controllers
         }
 
         // GET: Employees/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -107,7 +111,7 @@ namespace Company.Controllers
                 return NotFound();
             }
 
-           /* var employee = await _context.Employee.FindAsync(id);*/
+            /* var employee = await _context.Employee.FindAsync(id);*/
             var employee = _context.Employee.Where(m => m.Id == id).Include(m => m.Clients).First();
             if (employee == null)
             {
@@ -131,8 +135,8 @@ namespace Company.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-/*        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,BirthDate,Salary,JobTitle,BranchId")] Employee employee)
-*/        public async Task<IActionResult> Edit(int id, IFormFile file, EmployeeClientsEditViewModel viewmodel)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(int id, IFormFile file, EmployeeClientsEditViewModel viewmodel)
 
         {
             if (id != viewmodel.Employee.Id)
@@ -140,53 +144,51 @@ namespace Company.Controllers
                 return NotFound();
             }
 
-           /* if (ModelState.IsValid)
-            {*/
-                try
+            try
+            {
+                if (file != null)
                 {
-                    if (file != null)
-                    {
-                        string filename = file.FileName;
-                        string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images"));
-                        using (var filestream = new FileStream(Path.Combine(path, filename), FileMode.Create))
-                        { await file.CopyToAsync(filestream); }
+                    string filename = file.FileName;
+                    string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images"));
+                    using (var filestream = new FileStream(Path.Combine(path, filename), FileMode.Create))
+                    { await file.CopyToAsync(filestream); }
 
-                        viewmodel.Employee.ProfilePicture = filename;
-                    }
-
-                    _context.Update(viewmodel.Employee);
-                    await _context.SaveChangesAsync();
-
-                    IEnumerable<int> listClients = viewmodel.SelectedClients;
-                    IQueryable<ClientEmployee> toBeRemoved = _context.ClientEmployees.Where(s => !listClients.Contains(s.ClientId) && s.EmployeeId == id);
-                    _context.ClientEmployees.RemoveRange(toBeRemoved);
-
-                    IEnumerable<int> existClients = _context.ClientEmployees.Where(s => listClients.Contains(s.ClientId) && s.EmployeeId == id).Select(s => s.ClientId);
-                    IEnumerable<int> newActors = listClients.Where(s => !existClients.Contains(s));
-                    foreach (int actorId in newActors) 
-                        _context.ClientEmployees.Add(new ClientEmployee { ClientId = actorId, EmployeeId = id });
-
-                    await _context.SaveChangesAsync();
+                    viewmodel.Employee.ProfilePicture = filename;
                 }
-                catch (DbUpdateConcurrencyException)
+
+                _context.Update(viewmodel.Employee);
+                await _context.SaveChangesAsync();
+
+                IEnumerable<int> listClients = viewmodel.SelectedClients;
+                IQueryable<ClientEmployee> toBeRemoved = _context.ClientEmployees.Where(s => !listClients.Contains(s.ClientId) && s.EmployeeId == id);
+                _context.ClientEmployees.RemoveRange(toBeRemoved);
+
+                IEnumerable<int> existClients = _context.ClientEmployees.Where(s => listClients.Contains(s.ClientId) && s.EmployeeId == id).Select(s => s.ClientId);
+                IEnumerable<int> newActors = listClients.Where(s => !existClients.Contains(s));
+                foreach (int actorId in newActors)
+                    _context.ClientEmployees.Add(new ClientEmployee { ClientId = actorId, EmployeeId = id });
+
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!EmployeeExists(viewmodel.Employee.Id))
                 {
-                    if (!EmployeeExists(viewmodel.Employee.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound();
                 }
-                //return RedirectToAction(nameof(Index));
-            //}
+                else
+                {
+                    throw;
+                }
+            }
+
             ViewData["BranchId"] = new SelectList(_context.Branch, "Id", "Name", viewmodel.Employee.BranchId);
             return RedirectToAction(nameof(Index));
-            //return View(viewmodel);
+
         }
 
         // GET: Employees/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -209,6 +211,7 @@ namespace Company.Controllers
         // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var employee = await _context.Employee.FindAsync(id);

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Company.Migrations
 {
     [DbContext(typeof(CompanyContext))]
-    [Migration("20220207133246_Dodadeno")]
-    partial class Dodadeno
+    [Migration("20220208005500_Nova")]
+    partial class Nova
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -116,6 +116,9 @@ namespace Company.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
+
+                    b.Property<string>("ProfilePicture")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Salary")
                         .HasColumnType("int");

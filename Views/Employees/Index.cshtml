@@ -8,9 +8,12 @@
 
 <h1>Employees</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
 
 <form asp-controller="Employees" asp-action="Index" method="get">
     <p>
@@ -25,12 +28,6 @@
 <table class="table">
     <thead>
         <tr>
-            @*<th>
-                    @Html.DisplayNameFor(model => model.FirstName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LastName)
-                </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.Employees[0].FullName)
             </th>
@@ -58,58 +55,56 @@
     <tbody>
         @foreach (var item in Model.Employees)
         {
-        <tr>
-            @*<td>
-            @Html.DisplayFor(modelItem => item.FirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>*@
-            <td>
-                <img src="~/images/@item.ProfilePicture"
-                     class="rounded-circle"
-                     height="40" width="40"
-                     asp-append-version="true" />
-                @item.FullName
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.FullName)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.BirthDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Age)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Salary)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.JobTitle)
-            </td>
-            <td>
-                @if (item.BranchId != null)
-                {
-                    <a asp-controller="Branches" asp-action="Details" asp-route-id="@item.BranchId">@Html.DisplayFor(modelItem => item.Branch.Name)</a>
-                }
-            </td>
-            <td>
-                @if (item.Clients != null)
-                {
-                    @foreach (var client in item.Clients)
+            <tr>
+                <td>
+                    <img src="~/images/@item.ProfilePicture"
+                         class="rounded-circle"
+                         height="40" width="40"
+                         asp-append-version="true" />
+                    @item.FullName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BirthDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Age)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Salary)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.JobTitle)
+                </td>
+                <td>
+                    @if (item.BranchId != null)
                     {
-                        <a asp-controller="Clients" asp-action="Details" asp-route-id="@client.ClientId">
-                            @client.Client.Name
-                        </a> <br />
+                        <a asp-controller="Branches" asp-action="Details" asp-route-id="@item.BranchId">@Html.DisplayFor(modelItem => item.Branch.Name)</a>
                     }
-                }
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+                </td>
+                <td>
+                    @if (item.Clients != null)
+                    {
+                        @foreach (var client in item.Clients)
+                        {
+                            <a asp-controller="Clients" asp-action="Details" asp-route-id="@client.ClientId">
+                                @client.Client.Name
+                            </a> <br />
+                        }
+                    }
+                </td>
+                <td>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit |</a>
+                    }
+
+                    <a asp-action="Details" asp-route-id="@item.Id">Details </a> |
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
+            </tr>
         }
     </tbody>
 </table>
